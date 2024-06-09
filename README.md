@@ -79,7 +79,7 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
 
 ## Improvements to Consider
 
-While we've followed the brief pretty closely, we've made some assumptions (eg. any number of columns, header item 0 is the material type (eg. tables) but will group the totals by material type, that would be great to discuss, but here are some improvements we could make:
+While we've followed the brief pretty closely, we've made some assumptions (eg. any number of columns, header item 0 is the material type (eg. tables)) but will group the totals by material type, but here are some improvements we could make:
 
 1. **Better Column Type Detection**:
    Currently (naively) looks for first column that could be currency and uses that to create a BOM.
