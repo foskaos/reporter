@@ -137,7 +137,7 @@ class TableBOM:
                     bom[index]['items'].append({'item_name': name} | {a: v for a, v in zip(attrs, vals)})
 
             for material, mat_bom in bom.items():
-                cost_table,sub_total = self.extract_and_sum_currency(mat_bom['items'])
+                cost_table,sub_total = self.extract_costs(mat_bom['items'])
                 if cost_table:
                     bom[material]['cost_table'] = cost_table
                     bom[material]['sub_total'] = sub_total
