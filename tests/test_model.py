@@ -106,7 +106,6 @@ Subtotal for Header1: $30.00
 
 
 The total cost will be $30.00.'''
-    print(renderer.output)
     assert renderer.output == expected_output
 
 
@@ -129,7 +128,6 @@ def test_bom_renderer_write_file(tmp_path, mock_template_dir):
     # Check if the file was written correctly
     with open(output_file, 'r') as f:
         content = f.read()
-        #print(content)
         expected_output = '''Project `Project Name` requires the following material:
 
 Header1:
