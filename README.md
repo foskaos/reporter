@@ -20,8 +20,8 @@
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/your-repo-name.git
-    cd your-repo-name
+    git clone https://github.com/foskaos/reporter.git
+    cd reporter
     ```
 
 2. **Create and activate a virtual environment**:
@@ -79,14 +79,14 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
 
 ## Improvements to Consider
 
-While we've followed the brief pretty closely, we've made some generalizing assumptions, that would be great to discuss, but here are some improvements we could make:
+While we've followed the brief pretty closely, we've made some generalizing assumptions (eg. any number of columns, header item 0 is the material type (eg. tables) but will group the totals by material type, that would be great to discuss, but here are some improvements we could make:
 
 1. **Better Column Type Detection**:
    Currently (naively) looks for first column that could be currency and uses that to create a BOM.
    1. Take arguments specifying what the columns contain.
    2. Could totat/subtotal any numerical column and distinguish from currency columns. Currently depends on currency being {{Symbol}}{{Value}}
 2. **Advanced Analysis**
-   We are handling any number of columns and assuming the first item in the header row is effectively the object type, and that there must be at least one rigidly detected currency column. Could detect columns with multiple currencies and get live exchange rates and provide a normalized total and subtotal in a selected currency, or use column names as hints
+   We are handling any number of columns and assuming the first item in the header row is effectively the object type, and that there must be at least one rigidly detected currency column if not it doesn't make a BOM. Could detect columns with multiple currencies and get live exchange rates and provide a normalized total and subtotal in a selected currency, or use column names as hints
 3. **LLM Table extraction**
    Could put an LLM in the pipeline to recognize tables and return json with function calling, especially useful if tables are a bit less narrowly defined, or using mixed delimiters.
 4. **Unix Pipes**

@@ -94,10 +94,7 @@ class TableBOM:
         cost_table = []
         try:
             for item in items:
-
                 for key, value in item.items():
-                    if has_currency:
-                        continue
                     number, symbol = self.is_currency(value)
                     if symbol:
                         self.currency_symbol = symbol
