@@ -9,6 +9,7 @@ def parse_args():
     parser.add_argument('--input', type=str, required=True, help='Input file name')
     parser.add_argument('--output', type=str, required=False, help='Output file name')
     parser.add_argument('--template', type=str, required=False, help='Template name')
+    parser.add_argument('--console', action='store_true', required=False, help='Prints template to console')
     return parser.parse_args()
 
 
@@ -73,6 +74,9 @@ def main(args):
     except Exception as e:
         print(f"Error during rendering: {e}")
         sys.exit(1)
+
+    if args.console:
+        print(renderer.output)
 
     # Write the output file
     try:

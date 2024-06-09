@@ -19,6 +19,6 @@ mollit anim id.
 
 | Chairs |  LPrice |
 |--------|--------|
-|   AA   |    10 |
-|    Z   |     1 |
-|   FOO  |     1 |
+|   AA   |    $10 |
+|    Z   |     $1 |
+|   FOO  |     $1 |
