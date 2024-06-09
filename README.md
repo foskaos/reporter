@@ -84,7 +84,7 @@ While we've followed the brief pretty closely, we've made some assumptions (eg. 
 1. **Better Column Type Detection**:
    Currently (naively) looks for first column that could be currency and uses that to create a BOM.
    1. Take arguments specifying what the columns contain.
-   2. Could totat/subtotal any numerical column and distinguish from currency columns. Currently depends on currency being {{Symbol}}{{Value}}
+   2. Could total/subtotal any numerical column and distinguish from currency columns. Currently depends on currency being {{Symbol}}{{Value}}
 2. **Advanced Analysis**
    We are handling any number of columns and assuming the first item in the header row is effectively the object type, and that there must be at least one rigidly detected currency column if not it doesn't make a BOM. Could detect columns with multiple currencies and get live exchange rates and provide a normalized total and subtotal in a selected currency, or use column names as hints
 3. **LLM Table extraction**
