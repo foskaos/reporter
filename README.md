@@ -67,7 +67,7 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
    reporter --input example_input.txt --template boring
    ```
 3. **Specific Output Location**:
-   Process an input file and output the result using a customer output path and filename but with the fancy default template :) 
+   Process an input file and output the result using a custome output path and filename but with the fancy default template :) 
    ```bash
    reporter --input example_input.txt --output example_output.txt
     ```
@@ -79,7 +79,7 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
 
 ## Improvements to Consider
 
-While we've followed the brief pretty closely, we've made some assumptions (eg. any number of columns, header item 0 is the material type (eg. tables)) but will group the totals by material type, but here are some improvements we could make:
+I've followed the brief pretty closely, I've made some assumptions (e.g. any number of columns, header item 0 is the material type (eg. tables)) but here are some improvements that would be fun to discuss:
 
 1. **Better Column Type Detection**:
    Currently (naively) looks for first column that could be currency and uses that to create a BOM.
