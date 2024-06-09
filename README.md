@@ -79,7 +79,7 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
 
 ## Improvements to Consider
 
-While we've followed the brief pretty closely, we've made some generalizing assumptions (eg. any number of columns, header item 0 is the material type (eg. tables) but will group the totals by material type, that would be great to discuss, but here are some improvements we could make:
+While we've followed the brief pretty closely, we've made some assumptions (eg. any number of columns, header item 0 is the material type (eg. tables) but will group the totals by material type, that would be great to discuss, but here are some improvements we could make:
 
 1. **Better Column Type Detection**:
    Currently (naively) looks for first column that could be currency and uses that to create a BOM.
@@ -93,6 +93,8 @@ While we've followed the brief pretty closely, we've made some generalizing assu
    Could be used with unix pipes. eg cat input.txt | reporter
 5. **Multiple files/Directory handling**
    Could be cool to handle directories instead of individual files. Or pass a list of files.
-6. **More Templates**
+6. **Semi-Structed output**
+   In the context of a wider project, it might make more sense to output json or csv for use in database, DataFrames etc.
+7. **More Templates**
    
    
