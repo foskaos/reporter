@@ -23,10 +23,6 @@ def main(args):
 
     template_file = f"{args.template}" if args.template else None
 
-    if template_file:
-        tf = Path(template_file)
-        templ_dir = tf.parents[0]
-
     # Check if input file exists
     if not input_file.exists():
         print(f"Error: Input file '{input_file}' does not exist.")
@@ -64,8 +60,6 @@ def main(args):
         print(f"Error converting table to bill of materials: {e}")
         sys.exit(1)
 
-
-
     # try to render the file as a string
     try:
         if template_file:
@@ -83,13 +77,14 @@ def main(args):
     try:
         renderer.write_file(output_file)
     except Exception as e:
-        print(f"Error writting file: {e}")
+        print(f"Error writing file: {e}")
         sys.exit(1)
 
 
 def cli():
     args = parse_args()
     main(args)
+
 
 if __name__ == "__main__":
     cli()

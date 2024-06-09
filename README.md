@@ -1,5 +1,62 @@
 # Reporter CLI
 
+This is tool that can extract tables (in markdown format) from text like this:
+
+```text
+# A fancy title
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+
+| Tables |  Price |
+|--------|--------|
+|    A   |  $1600 |
+|    B   |    $12 |
+|    C   |     $1 |
+
+
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+mollit anim id.
+
+
+| Chairs |  Price |
+|--------|--------|
+|   AA   |    $10 |
+|    Z   |     $1 |
+|   FOO  |     $1 |
+
+```
+
+This tool will assume that the first # line is the project name, and will then compile the tables, under the assumption that the first column tells us a material, and that there is at least one column containing prices, by virtue of having numbers with a currency prefix.
+This is then composed into a bill of materials and will output something like this:
+
+```text
+Project `A fancy title` requires the following material:
+
+Chairs:
+
+ AA - ($10.00).
+  Z - ($1.00).
+FOO - ($1.00).
+
+Subtotal for Chairs: $12.00
+
+Tables:
+
+  A - ($1600.00).
+  B - ($12.00).
+  C - ($1.00).
+
+Subtotal for Tables: $1613.00
+
+
+The total cost will be $1625.00.
+```
+
+
 ## Setup Instructions
 
 ### Using Docker

@@ -8,7 +8,7 @@ from reporter_cli import cli, model
 @pytest.fixture
 def mock_text_processor(monkeypatch):
     class MockTextProcessor:
-        def __init__(self, *args, **kwargs):
+        def __init__(self):
             self.project_name = "ProjectName"
 
         def extract_tables(self):
@@ -113,7 +113,6 @@ def test_main(mock_text_processor, mock_path_exists, mock_renderer, monkeypatch,
     |    A   |  $1600 |
     |    B   |    $12 |
     |    C   |     $1 |''')
-
 
     template_file = tmp_path / "template.txt"
     template_file.write_text("template data")
@@ -225,12 +224,13 @@ def test_error_during_processing(monkeypatch, tmp_path):
     print(f"Exited with code: {exc_info.value.code}")
     assert exc_info.value.code == 1
 
+
 def test_error_during_bom(monkeypatch, tmp_path):
     # Mock class to replace TextProcessor
     class MockTableBOM:
         def __init__(self, *args, **kwargs):
             print("MockTableBOM initialized")
-            self.tables = [['a','b'],[['a'], ['b']]]
+            self.tables = [['a', 'b'], [['a'], ['b']]]
             self.total_cost = 0.0
             self.project_name = 'Test'
             self.bill_of_materials = self.make_bom()

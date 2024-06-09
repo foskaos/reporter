@@ -1,8 +1,6 @@
 import pytest
 from pathlib import Path
 from reporter_cli.model import TextProcessor, TableBOM, BOMRenderer
-from jinja2 import Template
-import tempfile
 
 
 @pytest.fixture
