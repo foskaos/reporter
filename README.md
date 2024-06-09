@@ -1,6 +1,6 @@
 # Reporter CLI
 
-This is tool that can extract tables (in Markdown format) from text like this:
+This is a tool that can extract tables (in Markdown format) from a textfile like this:
 
 ```text
 # A fancy title
@@ -30,7 +30,7 @@ mollit anim id.
 
 ```
 
-This tool will assume that the first # line is the project name, and will then compile the tables, under the assumption that the first column tells us a material, and that there is at least one column containing prices, by virtue of having numbers with a currency prefix. We only keep the first column that has currency.
+This tool will assume that the first # line is the project name, and will then compile the tables, under the assumption that the first column tells us a material, and that there is at least one column containing prices, by virtue of having numbers with a currency prefix. It only keeps the first column that has currency.
 This is then composed into a bill of materials and will output something like this:
 
 ```text
@@ -102,7 +102,7 @@ pytest
 
 ## Usage
 
-The `reporter` CLI tool processes an input file and outputs the result to a specified file using a template (which can be specified).
+The `reporter` CLI tool processes an input file and outputs the result to a specified file using a template (which can be specified) or to the console.
 
 ### Commands and Options
 
@@ -128,8 +128,8 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
    ```bash
    reporter --input example_input.txt --output example_output.txt
     ```
-4. **Print template to command line**:
-   Put the contents of the template on the command line with the --console option
+4. **Print template to the console**:
+   Put the contents of the template on the console with the --console option
    ```bash
    reporter --input example_input.txt --console
     ```
@@ -145,9 +145,9 @@ I've followed the brief pretty closely, I've made some assumptions (e.g. any num
 2. **Advanced Analysis**
    We are handling any number of columns and assuming the first item in the header row is effectively the object type, and that there must be at least one rigidly detected currency column if not it doesn't make a BOM. Could detect columns with multiple currencies and get live exchange rates and provide a normalized total and subtotal in a selected currency, or use column names as hints
 3. **LLM Table extraction**
-   Could put an LLM in the pipeline to recognize tables and return json with function calling, especially useful if tables are a bit less narrowly defined, or using mixed delimiters.
+   Could put an LLM in the pipeline to recognize tables and return json with function calling, especially useful if tables are a bit less narrowly defined, or using mixed delimiters. As is, this tool could be useful in labelling a training data set.
 4. **Unix Pipes**
-   Could be used with unix pipes. eg cat input.txt | reporter
+   Could be used with unix pipes: e.g. cat input.txt | reporter
 5. **Multiple files/Directory handling**
    Could be cool to handle directories instead of individual files. Or pass a list of files.
 6. **Semi-Structed output**

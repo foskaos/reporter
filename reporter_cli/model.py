@@ -86,7 +86,7 @@ class TableBOM:
         """ check for currency value assuming symbol is at the start"""
         # regex that looks for a currency symbol then a number with optional decimals
         pattern = r'^([$£€])(\d+(\.\d{1,2})?)$'
-        # remove commas
+        # remove commas - bad for european formatting !!
         value = value.replace(',', '')
         # Match the value with the pattern
         match = re.match(pattern, value)
