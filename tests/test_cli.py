@@ -107,7 +107,13 @@ def test_main(mock_text_processor, mock_path_exists, mock_renderer, monkeypatch,
 
     # Create temporary input and template files
     input_file = tmp_path / "input.txt"
-    input_file.write_text("dummy data")
+    input_file.write_text('''
+    | Tables |  LPrice |
+    |--------|--------|
+    |    A   |  $1600 |
+    |    B   |    $12 |
+    |    C   |     $1 |''')
+
 
     template_file = tmp_path / "template.txt"
     template_file.write_text("template data")
@@ -129,7 +135,12 @@ def test_successful_rendering_without_overwriting(mock_text_processor, mock_path
 
     # Create temporary input and template files
     input_file = tmp_path / "input.txt"
-    input_file.write_text("dummy data")
+    input_file.write_text('''
+| Tables |  LPrice |
+|--------|--------|
+|    A   |  $1600 |
+|    B   |    $12 |
+|    C   |     $1 |''')
 
     template_file = tmp_path / "template.txt"
     template_file.write_text("template data")
@@ -163,6 +174,19 @@ def test_invalid_input_file(mock_text_processor, mock_path_exists, mock_renderer
         cli.main(args)
     assert exc_info.value.code == 1
 
+def test_input_file_with_no_tables(mock_text_processor, mock_path_exists, mock_renderer, monkeypatch, tmp_path):
+    monkeypatch.setattr('builtins.input', lambda _: 'yes')
+    # Create a temporary input file that is invalid (e.g., directory instead of file)
+    input_file = tmp_path / "input.txt"
+    input_file.write_text('''Look no tables''')
+
+    test_args = ["cli.py", "--input", str(input_file), "--output", str(tmp_path / "output.txt")]
+    sys.argv = test_args
+    args = cli.parse_args()
+    with pytest.raises(SystemExit) as exc_info:
+        cli.main(args)
+    assert exc_info.value.code == 0
+
 
 def test_error_during_processing(monkeypatch, tmp_path):
     # Mock class to replace TextProcessor
@@ -180,7 +204,12 @@ def test_error_during_processing(monkeypatch, tmp_path):
 
     # Create a temporary input file
     input_file = tmp_path / "input.txt"
-    input_file.write_text("dummy data")
+    input_file.write_text('''
+    | Tables |  LPrice |
+    |--------|--------|
+    |    A   |  $1600 |
+    |    B   |    $12 |
+    |    C   |     $1 |''')
 
     # Set up test arguments
     test_args = ["cli.py", "--input", str(input_file), "--output", str(tmp_path / "output.txt")]
@@ -215,7 +244,12 @@ def test_error_during_bom(monkeypatch, tmp_path):
 
     # Create a temporary input file
     input_file = tmp_path / "input.txt"
-    input_file.write_text("dummy data")
+    input_file.write_text('''
+    | Tables |  LPrice |
+    |--------|--------|
+    |    A   |  $1600 |
+    |    B   |    $12 |
+    |    C   |     $1 |''')
 
     # Set up test arguments
     test_args = ["cli.py", "--input", str(input_file), "--output", str(tmp_path / "output.txt")]

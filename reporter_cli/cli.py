@@ -51,12 +51,18 @@ def main(args):
         print(f"Error processing input file: {e}")
         sys.exit(1)
 
+    if not tables:
+        print('No tables extracted, exiting')
+        sys.exit(0)
+
     # Create a bill of materials that can be nicely rendered
     try:
         bill_of_materials = TableBOM(tables, project_name)
     except Exception as e:
         print(f"Error converting table to bill of materials: {e}")
         sys.exit(1)
+
+
 
     # try to render the file as a string
     try:
@@ -68,7 +74,6 @@ def main(args):
         print(f"Error during rendering: {e}")
         sys.exit(1)
 
-    print(renderer.output)
     # Write the output file
     try:
         renderer.write_file(output_file)
