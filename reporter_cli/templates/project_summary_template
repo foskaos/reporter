@@ -1,8 +1,10 @@
 Project `{{title}}` requires the following material:
 
 {% for material,material_bill in bom.items() %}{{ material }}:
-{% for item in material_bill['items'] %}{{ item['model_name'].rjust(max_len) }} - ({{ item['Price'] }}).
-{% endfor %}Subtotal for {{ material }}: ${{"%.02f"|format(material_bill['sub_total'])}}
+{% if 'cost_table' in material_bill %}
+{% for item in material_bill['cost_table'] %}{{ item['item_name'].rjust(max_len) }} - ({{currency}}{{ "%.02f"|format(item['Cost']) }}).
+{% endfor %}
+Subtotal for {{ material }}: {{currency}}{{"%.02f"|format(material_bill['sub_total'])}}{% else %}No costs found for {{ material }}{% endif %}
 
 {% endfor %}
-The total cost will be ${{"%.02f"|format(total_cost)}}.
+The total cost will be {{currency}}{{"%.02f"|format(total_cost)}}.

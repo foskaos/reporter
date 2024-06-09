@@ -1,14 +1,12 @@
 from pathlib import Path
 import os
+import re
 from typing import Tuple, List, Dict
 from jinja2 import Environment, FileSystemLoader, select_autoescape, PackageLoader
-
-
 
 class TextProcessor:
     def __init__(self,
                  filename: str):
-
         self.filename = Path(filename)
         self.text = self._read_file()
         self.project_name = None
@@ -18,15 +16,14 @@ class TextProcessor:
         with self.filename.open('r', encoding='utf-8') as f:
             return f.read()
 
-    def _process_table(self,
-                       table: List) -> Tuple[List, List]:
+
+    def _process_table(self,table: List) -> Tuple[List, List]:
         header = [cell.strip() for cell in table[0].split('|') if cell.strip()]
         data = []
         for row in table[2:]:
             cells = [cell.strip() for cell in row.split('|') if cell.strip()]
             if len(cells) == len(header):
                 data.append(cells)
-
         return header, data
 
     def extract_tables(self) -> List:
@@ -65,12 +62,44 @@ class TableBOM:
                  project_name: str):
         self.tables = tables
         self.total_cost = 0.0
+        self.currency_symbol = None
         self.bill_of_materials = self.make_bom()
         self.project_name = project_name
 
 
     def __repr__(self):
         return f"{self.bill_of_materials}"
+
+    @staticmethod
+    def is_currency(value: str) -> Tuple:
+        # Check if the value matches a currency pattern for $, £, or €
+        match = re.match(r'^(?P<symbol>[\$\£\€])(?P<number>\d+(\.\d{1,2})?)$', value)
+        if match:
+            return float(match.group('number')), match.group('symbol')
+        else:
+            return None, None
+
+    def extract_and_sum_currency(self, data_list: List) -> Tuple:
+        items = data_list
+        has_currency = False
+        # Find columns that have currency values and create a costs table
+        cost_table = []
+        for item in items:
+            for key, value in item.items():
+                number, symbol = self.is_currency(value)
+                if symbol:
+                    self.currency_symbol = symbol
+                    has_currency = True
+                if number is not None:
+                    cost_table.append({'item_name':item['item_name']} | {'Cost': number,'Currency': symbol})
+
+        if has_currency:
+            sub_tot = 0
+            for item in cost_table:
+                sub_tot += item['Cost']
+            return cost_table,sub_tot
+        else:
+            return [], 0
 
     def make_bom(self) -> Dict:
         indices = set()
@@ -86,13 +115,14 @@ class TableBOM:
             index, *attrs = header
             for row in data:
                 name, *vals = row
-                bom[index]['items'].append({'model_name': name} | {a: v for a, v in zip(attrs, vals) if a in ['Price']})
+                bom[index]['items'].append({'item_name': name} | {a: v for a, v in zip(attrs, vals)})
 
         for material, mat_bom in bom.items():
-            for item in mat_bom['items']:
-                if 'Price' in item.keys():
-                    bom[material]['sub_total'] += float(item['Price'][1:])
-                    self.total_cost += float(item['Price'][1:])
+            cost_table,sub_total = self.extract_and_sum_currency(mat_bom['items'])
+            if cost_table:
+                bom[material]['cost_table'] = cost_table
+                bom[material]['sub_total'] = sub_total
+                self.total_cost += sub_total
 
         return bom
 
@@ -101,35 +131,30 @@ class BOMRenderer:
 
     def __init__(self,
                  bom: TableBOM,
-                 template: str = 'project_summary_template',
-                 template_dir: str = 'reporter_cli/templates'):
+                 template: str = 'project_summary_template',):
         self.bom = bom
         self.template_name = template
-        self.env = Environment(loader=PackageLoader('reporter_cli', 'templates'),#loader=FileSystemLoader("reporter_cli/templates"),
+        self.env = Environment(loader=PackageLoader('reporter_cli', 'templates'),
                                autoescape=select_autoescape())
         self.template = self.env.get_template(self.template_name)
         self.output = self.make_report()
 
     def make_report(self) -> str:
-        max_len = [[b['model_name'] for b in v['items']] for a,v in self.bom.bill_of_materials.items()]
+        max_len = [[b['item_name'] for b in v['items']] for a,v in self.bom.bill_of_materials.items()]
 
         if max_len:
             width = max([max([len(s) for s in l]) for l in max_len])
         else:
             width = 10
+
+
         return self.template.render(bom=self.bom.bill_of_materials,
                                     title=self.bom.project_name,
                                     total_cost=self.bom.total_cost,
+                                    currency=self.bom.currency_symbol,
                                     max_len=width)
 
     def write_file(self,output_file):
         with open(output_file,'w') as f:
             f.write(self.output)
             print(f'{output_file} written successfully')
-
-
-
-
-
-
-
