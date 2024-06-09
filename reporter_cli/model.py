@@ -1,8 +1,8 @@
 from pathlib import Path
-import os
 import re
 from typing import Tuple, List, Dict
-from jinja2 import Environment, FileSystemLoader, select_autoescape, PackageLoader
+from jinja2 import Environment, select_autoescape, PackageLoader
+
 
 class TextProcessor:
     def __init__(self,
@@ -18,6 +18,7 @@ class TextProcessor:
 
 
     def _process_table(self,table: List) -> Tuple[List, List]:
+        ''' Extract header and rows from table '''
         try:
             header = [cell.strip() for cell in table[0].split('|') if cell.strip()]
         except Exception as e:
@@ -35,6 +36,7 @@ class TextProcessor:
         return header, data
 
     def extract_tables(self) -> List:
+        ''' Extract Tables from text'''
         tables = []
         current_table = []
         inside_table = False
@@ -60,7 +62,7 @@ class TextProcessor:
             if inside_table and len(current_table) >= 2:
                 tables.append(self._process_table(current_table))
         except Exception as e:
-            print('Could not extract tables from provided text')
+            print(f'Could not extract tables from provided text. Error: {e}')
         return tables
 
 
@@ -87,7 +89,8 @@ class TableBOM:
         else:
             return None, None
 
-    def extract_and_sum_currency(self, data_list: List) -> Tuple:
+    def extract_costs(self, data_list: List) -> Tuple:
+        ''' Tries to find currency column and make a cost table and sub-total for each 'material' '''
         items = data_list
         has_currency = False
         # Find columns that have currency values and create a costs table
@@ -100,7 +103,7 @@ class TableBOM:
                         self.currency_symbol = symbol
                         has_currency = True
                     if number is not None:
-                        cost_table.append({'item_name':item['item_name']} | {'Cost': number,'Currency': symbol})
+                        cost_table.append({'item_name': item['item_name']} | {'Cost': number, 'Currency': symbol})
 
             if has_currency:
                 sub_tot = 0
@@ -110,10 +113,11 @@ class TableBOM:
             else:
                 return [], 0
         except Exception as e:
-            print('Error in parseing table for currency values')
+            print(f'Error in parsing table for currency values. Error: {e}')
             return [], 0
 
     def make_bom(self) -> Dict:
+        ''' complies tables into a bill of materials for rendering'''
         indices = set()
         try:
             for table in self.tables:
@@ -147,7 +151,7 @@ class BOMRenderer:
 
     def __init__(self,
                  bom: TableBOM,
-                 template: str = 'project_summary_template',):
+                 template: str = 'project_summary_template'):
         self.bom = bom
         self.template_name = template
         self.env = Environment(loader=PackageLoader('reporter_cli', 'templates'),
@@ -156,6 +160,7 @@ class BOMRenderer:
         self.output = self.make_report()
 
     def make_report(self) -> str:
+        ''' renders a bill of materials object with a jinja2 template'''
         try:
             max_len = [[b['item_name'] for b in v['items']] for a,v in self.bom.bill_of_materials.items()]
 
@@ -173,7 +178,8 @@ class BOMRenderer:
             print(f'Error with template rendering: {e}')
             return ''
 
-    def write_file(self,output_file):
+    def write_file(self, output_file):
+        ''' writes output file '''
         try:
             with open(output_file, 'w', encoding='utf-8') as f:
                 f.write(self.output)

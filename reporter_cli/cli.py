@@ -1,8 +1,9 @@
 import argparse
 import sys
-import os
+
 from pathlib import Path
 from reporter_cli.model import TextProcessor, TableBOM, BOMRenderer
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
