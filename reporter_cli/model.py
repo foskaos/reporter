@@ -108,9 +108,7 @@ class TableBOM:
         cost_table = []
         try:
             for item in items:
-                print(item,currency_column)
                 for key, value in item.items():
-                    print(key)
                     number, symbol = self.is_currency(value)
                     if symbol:
                         self.currency_symbol = symbol
@@ -121,10 +119,11 @@ class TableBOM:
                         if number is not None:
                             if key == currency_column:
                                 cost_table.append({'item_name': item['item_name']} | {'Cost': number, 'Currency': symbol})
+                    # reset currency column in case tables have different column names
+                    currency_column = None
 
             if has_currency:
                 sub_tot = 0
-                print(cost_table)
                 for item in cost_table:
                     sub_tot += item['Cost']
                 return cost_table, sub_tot
