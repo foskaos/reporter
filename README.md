@@ -4,7 +4,7 @@
 
 ### Using Docker
 
-1. Build the Docker image:
+1. Build the Docker image from included Dockerfile, which builds and tests the package:
     ```bash
     docker build -t reporter-cli .
     ```
