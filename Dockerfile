@@ -6,7 +6,7 @@ COPY ./reporter_cli/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY . /appls
+COPY . /app
 
 RUN chmod +x /app/Makefile
 
