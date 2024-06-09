@@ -1,6 +1,6 @@
 # Reporter CLI
 
-This is tool that can extract tables (in markdown format) from text like this:
+This is tool that can extract tables (in Markdown format) from text like this:
 
 ```text
 # A fancy title
@@ -30,7 +30,7 @@ mollit anim id.
 
 ```
 
-This tool will assume that the first # line is the project name, and will then compile the tables, under the assumption that the first column tells us a material, and that there is at least one column containing prices, by virtue of having numbers with a currency prefix.
+This tool will assume that the first # line is the project name, and will then compile the tables, under the assumption that the first column tells us a material, and that there is at least one column containing prices, by virtue of having numbers with a currency prefix. We only keep the first column that has currency.
 This is then composed into a bill of materials and will output something like this:
 
 ```text
@@ -139,7 +139,7 @@ The `reporter` CLI tool processes an input file and outputs the result to a spec
 I've followed the brief pretty closely, I've made some assumptions (e.g. any number of columns, header item 0 is the material type (eg. tables)) but here are some improvements that would be fun to discuss:
 
 1. **Better Column Type Detection**:
-   Currently (naively) looks for first column that could be currency and uses that to create a BOM.
+   Currently (naively) looks for a column that could be currency and uses that to create a BOM.
    1. Take arguments specifying what the columns contain.
    2. Could total/subtotal any numerical column and distinguish from currency columns. Currently depends on currency being {{Symbol}}{{Value}}
 2. **Advanced Analysis**
@@ -153,5 +153,3 @@ I've followed the brief pretty closely, I've made some assumptions (e.g. any num
 6. **Semi-Structed output**
    In the context of a wider project, it might make more sense to output json or csv for use in database, DataFrames etc.
 7. **More Templates**
-   
-   

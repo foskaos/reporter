@@ -103,20 +103,28 @@ class TableBOM:
         """ Tries to find currency column and make a cost table and sub-total for each 'material' """
         items = data_list
         has_currency = False
+        currency_column = None
         # Find columns that have currency values and create a costs table
         cost_table = []
         try:
             for item in items:
+                print(item,currency_column)
                 for key, value in item.items():
+                    print(key)
                     number, symbol = self.is_currency(value)
                     if symbol:
                         self.currency_symbol = symbol
                         has_currency = True
-                    if number is not None:
-                        cost_table.append({'item_name': item['item_name']} | {'Cost': number, 'Currency': symbol})
+                        # if we find a currency column, lets only use that one and block any extra ones
+                        if not currency_column:
+                            currency_column = key
+                        if number is not None:
+                            if key == currency_column:
+                                cost_table.append({'item_name': item['item_name']} | {'Cost': number, 'Currency': symbol})
 
             if has_currency:
                 sub_tot = 0
+                print(cost_table)
                 for item in cost_table:
                     sub_tot += item['Cost']
                 return cost_table, sub_tot
@@ -135,7 +143,7 @@ class TableBOM:
 
             for table in self.tables:
                 header, data = table
-                index, _ = header
+                index, *_ = header
                 # check if the table actuall has data, if not don't bother with adding it to the bom
                 if data:
                     indices.add(index)
