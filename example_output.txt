@@ -1,0 +1,13 @@
+Project `A fancy title` requires the following material:
+
+Tables:
+   A - ($1600).
+   B - ($12).
+   C - ($1).
+  AA - ($10).
+   Z - ($1).
+ FOO - ($1).
+Subtotal for Tables: $1625.00
+
+
+The total cost will be $1625.00.

@@ -1,0 +1,6 @@
+Project `{{title}}` requires the following material:
+
+{% for material,material_bill in bom.items() %}{% for item in material_bill['items'] %}{{ item['model_name'].rjust(max_len) }} - ({{ item['Price'] }}).
+{% endfor %}
+{% endfor %}
+The total cost will be ${{total_cost}}.
